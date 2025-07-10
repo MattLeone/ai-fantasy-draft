@@ -1,25 +1,9 @@
-import { useState, useCallback, useEffect } from 'react';
-import Anthropic from '@anthropic-ai/sdk';
+import { useState, useCallback } from 'react';
 import type { Battle, BattleResult, Player } from '../types';
-
-const anthropic = new Anthropic({
-  apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-  dangerouslyAllowBrowser: true // Only for development - move to backend for production
-});
 
 export const useClaudeAPI = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Debug: Check if API key is loaded
-  useEffect(() => {
-    if (!import.meta.env.VITE_ANTHROPIC_API_KEY) {
-      console.error('VITE_ANTHROPIC_API_KEY is not set in environment variables');
-      setError('API key not configured. Please check your .env.local file.');
-    } else {
-      console.log('API key loaded successfully');
-    }
-  }, []);
 
   const simulateBattle = useCallback(async (battle: Battle): Promise<BattleResult> => {
     setIsLoading(true);
@@ -28,19 +12,20 @@ export const useClaudeAPI = () => {
     try {
       const prompt = buildBattlePrompt(battle);
       
-      const response = await anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1500,
-        messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ]
+      const response = await fetch('/api/simulate-battle', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt })
       });
 
-      const responseText = response.content[0].type === 'text' ? response.content[0].text : '';
-      const result = parseClaudeResponse(responseText, battle);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const result = parseClaudeResponse(data.responseText, battle);
       return result;
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred';
@@ -191,25 +176,29 @@ Make it both strategically sound AND entertaining!`;
         varietyBoost, 
         randomSalt 
       });
-      console.log('Sending request to Claude...');
+      console.log('Sending request to API...');
       
-      const response = await anthropic.messages.create({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 2000, // Increased for more characters
-        messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ]
+      const response = await fetch('/api/generate-players', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          scenario, 
+          count: totalToGenerate,
+          prompt 
+        })
       });
 
-      console.log('Claude response received');
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('API response received');
+      console.log('Response text length:', data.responseText.length);
       
-      const responseText = response.content[0].type === 'text' ? response.content[0].text : '';
-      console.log('Response text length:', responseText.length);
-      
-      const allPlayers = parseGeneratedPlayers(responseText);
+      const allPlayers = parseGeneratedPlayers(data.responseText);
       console.log('Total generated players:', allPlayers.length);
       
       // Randomly select the number we actually need
