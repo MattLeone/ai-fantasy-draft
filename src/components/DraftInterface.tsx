@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import type { DraftSettings, Team, Player } from '../types';
 import { useClaudeAPI } from '../hooks/useClaudeAPI';
 
@@ -15,18 +15,25 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, teams, onDraf
   const [customPlayerName, setCustomPlayerName] = useState('');
   const [customPlayerDescription, setCustomPlayerDescription] = useState('');
   const [draftedTeams, setDraftedTeams] = useState<Team[]>(teams);
+  const isGeneratingRef = useRef(false);
   const { generatePlayers, isLoading, error } = useClaudeAPI();
 
   const totalRounds = settings.playersPerTeam;
   const maxPlayersPerTeam = settings.playersPerTeam;
 
   useEffect(() => {
-    if (settings.mode === 'ai_curated') {
+    if (settings.mode === 'ai_curated' && availablePlayers.length === 0 && !isGeneratingRef.current) {
       loadAIGeneratedPlayers();
     }
-  }, [settings]);
+  }, [settings.mode, settings.scenario.name, availablePlayers.length]);
 
   const loadAIGeneratedPlayers = async () => {
+    if (isGeneratingRef.current) {
+      console.log('Already generating players, skipping...');
+      return;
+    }
+    
+    isGeneratingRef.current = true;
     try {
       const players = await generatePlayers(
         settings.scenario.name, 
@@ -35,6 +42,8 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, teams, onDraf
       setAvailablePlayers(players);
     } catch (err) {
       console.error('Failed to generate players:', err);
+    } finally {
+      isGeneratingRef.current = false;
     }
   };
 

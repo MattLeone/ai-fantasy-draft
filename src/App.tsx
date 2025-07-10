@@ -8,10 +8,6 @@ import ResultsDisplay from './components/ResultsDisplay.tsx';
 import './App.css';
 
 function App() {
-  console.log('Environment check:', {
-    apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY,
-    allEnvVars: import.meta.env
-  });
   const [currentPhase, setCurrentPhase] = useState<DraftPhase>('setup');
   const [draftSettings, setDraftSettings] = useState<DraftSettings | null>(null);
   const [teams, setTeams] = useState<Team[]>([]);
@@ -22,10 +18,11 @@ function App() {
     setDraftSettings(settings);
     setCurrentPhase('drafting');
     
-    // Initialize teams
+    // Initialize teams with scenario-specific roles if available
+    const teamRoles = settings.scenario.teamRoles;
     const initialTeams: Team[] = Array.from({ length: settings.teamCount }, (_, i) => ({
       id: `team_${i + 1}`,
-      name: `Team ${i + 1}`,
+      name: teamRoles ? teamRoles[i] : `Team ${i + 1}`,
       players: [],
       owner: `Player ${i + 1}`
     }));
@@ -124,7 +121,6 @@ function App() {
           4. Results
         </div>
       </div>
-
       <main className="app-main">
         {renderCurrentPhase()}
       </main>

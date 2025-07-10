@@ -35,8 +35,10 @@ const ScenarioSelector: React.FC<ScenarioSelectorProps> = ({ scenarios, onScenar
       case 'combat': return '⚔️';
       case 'survival': return '🏕️';
       case 'intelligence': return '🧠';
-      case 'social': return '🗣️';
+      case 'social': return '💋';
       case 'creative': return '🎨';
+      case 'strategy': return '🎮';
+      case 'philosophy': return '⚖️';
       default: return '🎯';
     }
   };
@@ -46,8 +48,10 @@ const ScenarioSelector: React.FC<ScenarioSelectorProps> = ({ scenarios, onScenar
       case 'combat': return '#e53e3e';
       case 'survival': return '#38a169';
       case 'intelligence': return '#3182ce';
-      case 'social': return '#d69e2e';
+      case 'social': return '#d53f8c';
       case 'creative': return '#9f7aea';
+      case 'strategy': return '#d69e2e';
+      case 'philosophy': return '#4a5568';
       default: return '#4a5568';
     }
   };
@@ -133,12 +137,11 @@ const ScenarioSelector: React.FC<ScenarioSelectorProps> = ({ scenarios, onScenar
             <div className="setting-group">
               <label>Number of Teams</label>
               <select 
-                value={teamCount} 
+                value={2} 
+                disabled
                 onChange={(e) => setTeamCount(parseInt(e.target.value))}
               >
                 <option value={2}>2 Teams</option>
-                <option value={3}>3 Teams</option>
-                <option value={4}>4 Teams</option>
               </select>
             </div>
 
