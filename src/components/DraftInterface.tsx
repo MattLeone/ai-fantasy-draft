@@ -25,6 +25,7 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, teams, onDraf
     if (settings.mode === 'ai_curated' && availablePlayers.length === 0 && !isGeneratingRef.current) {
       loadAIGeneratedPlayers();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.mode, settings.scenario.name, availablePlayers.length]);
 
   const loadAIGeneratedPlayers = async () => {
