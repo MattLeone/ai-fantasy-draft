@@ -124,7 +124,7 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
   // Helper function to mark generation as started
   const markGenerationStarted = async (roomId: string) => {
     try {
-      await fetch('/api/draft-start-generation', {
+      await fetch('/api/draft-status', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
