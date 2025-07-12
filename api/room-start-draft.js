@@ -34,8 +34,11 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Need at least 2 players to start draft' });
     }
 
-    // Initialize teams based on players
-    const teams = players.map((player, index) => ({
+    // Randomize player order for fair draft start
+    const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
+    
+    // Initialize teams based on shuffled players
+    const teams = shuffledPlayers.map((player, index) => ({
       id: `team_${index + 1}`,
       name: draftSettings.scenario.teamRoles ? draftSettings.scenario.teamRoles[index] : `Team ${index + 1}`,
       owner: player.id,
@@ -47,10 +50,10 @@ export default async function handler(req, res) {
       status: 'drafting',
       settings: draftSettings,
       teams: teams,
-      playerOrder: players.map(p => p.id), // Order for turns
+      playerOrder: shuffledPlayers.map(p => p.id), // Randomized order for turns
       currentRound: 1,
       currentTeamIndex: 0,
-      currentTurn: players[0].id, // First player goes first
+      currentTurn: shuffledPlayers[0].id, // Random player goes first
       startedAt: new Date().toISOString(),
       startedBy: playerId,
       availablePlayers: [], // Will be populated by first AI generation
