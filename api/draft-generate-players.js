@@ -20,6 +20,7 @@ export default async function handler(req, res) {
       draftState.availablePlayers = players;
       draftState.playersGenerated = true;
       draftState.playersGeneratedAt = new Date().toISOString();
+      draftState.generatingPlayers = false; // Generation complete
 
       // Save updated state
       await redis.set(`room:${roomId}:draft`, draftState, { ex: 3600 });

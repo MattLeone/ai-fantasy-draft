@@ -57,6 +57,7 @@ export default async function handler(req, res) {
       startedAt: new Date().toISOString(),
       startedBy: playerId,
       availablePlayers: [], // Will be populated by first AI generation
+      generatingPlayers: false, // Track if AI generation is in progress
       lastPick: null
     };
 

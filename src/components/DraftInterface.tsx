@@ -92,13 +92,18 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
     hasGeneratedRef.current = true; // Mark as started here, not in useEffect
     
     try {
+      // Mark generation as starting in Redis for other players to see
+      const roomId = getRoomId();
+      if (roomId) {
+        await markGenerationStarted(roomId);
+      }
+      
       const players = await generatePlayers(
         settings.scenario.name, 
         settings.teamCount * settings.playersPerTeam + 15 // Extra options for multiplayer
       );
       
       // Store generated players in Redis for both players to access
-      const roomId = getRoomId();
       if (roomId) {
         const updatedState = await storeGeneratedPlayers(roomId, players);
         setDraftState(updatedState);
@@ -113,6 +118,21 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
       hasGeneratedRef.current = false; // Reset on error to allow retry
     } finally {
       isGeneratingRef.current = false;
+    }
+  };
+
+  // Helper function to mark generation as started
+  const markGenerationStarted = async (roomId: string) => {
+    try {
+      await fetch('/api/draft-start-generation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ roomId })
+      });
+    } catch (error) {
+      console.error('Failed to mark generation started:', error);
     }
   };
 
@@ -275,6 +295,19 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
           </div>
         </div>
 
+        {/* Generation status for non-turn players */}
+        {!isMyTurn() && draftState?.generatingPlayers && (
+          <div className="generation-status">
+            <div className="loading">
+              <div className="spinner"></div>
+              <p>🎲 Draft pool is being generated...</p>
+              <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.5rem' }}>
+                Please wait while the AI creates your player options. This might take a few minutes.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Player Selection - Only show if it's your turn */}
         {isMyTurn() && (
           <div className="player-selection">
@@ -283,10 +316,13 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
             {settings.mode === 'ai_curated' && (
               <div className="ai-players-section">
                 <h4>Available Players</h4>
-                {generatingPlayers ? (
+                {(generatingPlayers || draftState?.generatingPlayers) ? (
                   <div className="loading">
                     <div className="spinner"></div>
-                    <p>Generating players...</p>
+                    <p>🎲 Draft pool is being generated...</p>
+                    <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.5rem' }}>
+                      This might take a few minutes. Both players will see the same pool when ready!
+                    </p>
                   </div>
                 ) : availablePlayers.length > 0 ? (
                   <div className="players-grid">
