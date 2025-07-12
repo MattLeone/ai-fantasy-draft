@@ -1,4 +1,4 @@
-import { getRoomPlayers, addPlayerToRoom, getRoomHost } from './redis.js';
+import { getRoomPlayers, addPlayerToRoom, getRoomHost, getRoomConfig } from './redis.js';
 
 // API endpoint to join an existing room (stateless)
 export default async function handler(req, res) {
@@ -9,17 +9,10 @@ export default async function handler(req, res) {
   try {
     const { roomId, playerId } = req.body;
 
-    // Decode room configuration from room ID
-    let roomConfig;
-    try {
-      let base64 = roomId.replace(/-/g, '+').replace(/_/g, '/');
-      while (base64.length % 4) {
-        base64 += '=';
-      }
-      const json = Buffer.from(base64, 'base64').toString();
-      roomConfig = JSON.parse(json);
-    } catch (error) {
-      return res.status(400).json({ error: 'Invalid room ID' });
+    // Get room configuration from Redis
+    const roomConfig = await getRoomConfig(roomId);
+    if (!roomConfig) {
+      return res.status(404).json({ error: 'Room not found' });
     }
 
     // Get current players from Redis
@@ -41,15 +34,15 @@ export default async function handler(req, res) {
     
     // Player joined successfully
 
-    // Reconstruct room data from encoded config + current players
+    // Reconstruct room data from Redis config + current players
     const roomData = {
       id: roomId,
-      scenario: roomConfig.s,
-      draftMode: roomConfig.d,
-      playersPerTeam: roomConfig.p,
+      scenario: roomConfig.scenario,
+      draftMode: roomConfig.draftMode,
+      playersPerTeam: roomConfig.playersPerTeam,
       players: updatedPlayers,
       status: updatedPlayers.length >= 2 ? 'ready' : 'waiting',
-      createdAt: roomConfig.t,
+      createdAt: roomConfig.createdAt,
       hostId: hostId,
       draftState: null
     };

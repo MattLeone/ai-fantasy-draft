@@ -159,25 +159,12 @@ export const useRoom = () => {
     return () => clearInterval(intervalId);
   }, [silentRoomCheck]);
 
-  // Utility to decode room ID back to config (for joining via URL)
-  const decodeRoomConfig = useCallback((roomId: string) => {
-    try {
-      let base64 = roomId.replace(/-/g, '+').replace(/_/g, '/');
-      while (base64.length % 4) {
-        base64 += '=';
-      }
-      const json = atob(base64);
-      const data = JSON.parse(json);
-      return {
-        scenario: data.s,
-        draftMode: data.d,
-        playersPerTeam: data.p,
-        createdAt: data.t
-      };
-    } catch (error) {
-      console.error('Failed to decode room ID:', error);
-      return null;
-    }
+  // Note: Room config is now stored in Redis, no need to decode from URL
+  const decodeRoomConfig = useCallback((_roomId: string) => {
+    // This function is deprecated - room config is now fetched from Redis
+    // Room IDs are now simple alphanumeric strings like 'abc123'
+    console.warn('decodeRoomConfig is deprecated - config is now in Redis');
+    return null;
   }, []);
 
   // Start draft (host only)

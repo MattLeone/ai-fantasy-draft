@@ -84,4 +84,37 @@ export async function removePlayerFromRoom(roomId, playerId) {
   }
 }
 
+// Generate a simple room ID
+export function generateRoomId() {
+  // Generate a 6-character alphanumeric ID
+  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < 6; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
+// Store room configuration
+export async function setRoomConfig(roomId, config) {
+  try {
+    await redis.set(`room:${roomId}:config`, config, { ex: 3600 });
+    return true;
+  } catch (error) {
+    console.error('Error setting room config:', error);
+    return false;
+  }
+}
+
+// Get room configuration
+export async function getRoomConfig(roomId) {
+  try {
+    const config = await redis.get(`room:${roomId}:config`);
+    return config;
+  } catch (error) {
+    console.error('Error getting room config:', error);
+    return null;
+  }
+}
+
 export { redis };

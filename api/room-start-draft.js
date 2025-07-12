@@ -1,4 +1,4 @@
-import { getRoomHost, getRoomPlayers, redis } from './redis.js';
+import { getRoomHost, getRoomPlayers, getRoomConfig, redis } from './redis.js';
 
 // API endpoint to start the draft (host only)
 export default async function handler(req, res) {
@@ -9,17 +9,10 @@ export default async function handler(req, res) {
   try {
     const { roomId, playerId, draftSettings } = req.body;
 
-    // Decode room configuration from room ID
-    let roomConfig;
-    try {
-      let base64 = roomId.replace(/-/g, '+').replace(/_/g, '/');
-      while (base64.length % 4) {
-        base64 += '=';
-      }
-      const json = Buffer.from(base64, 'base64').toString();
-      roomConfig = JSON.parse(json);
-    } catch (error) {
-      return res.status(400).json({ error: 'Invalid room ID' });
+    // Get room configuration from Redis
+    const roomConfig = await getRoomConfig(roomId);
+    if (!roomConfig) {
+      return res.status(404).json({ error: 'Room not found' });
     }
 
     // Verify this player is the host

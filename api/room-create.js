@@ -1,4 +1,4 @@
-import { addPlayerToRoom, getRoomHost } from './redis.js';
+import { addPlayerToRoom, getRoomHost, generateRoomId, setRoomConfig } from './redis.js';
 
 // API endpoint to create a new room (stateless, URL-encoded)
 export default async function handler(req, res) {
@@ -9,17 +9,18 @@ export default async function handler(req, res) {
   try {
     const { scenario, draftMode, playersPerTeam, creatorId } = req.body;
 
-    // Generate encoded room ID containing all room configuration
+    // Generate simple room ID
+    const roomId = generateRoomId();
+    
+    // Store room configuration in Redis
     const roomConfig = {
-      s: scenario,
-      d: draftMode,
-      p: playersPerTeam,
-      t: new Date().toISOString()
+      scenario,
+      draftMode,
+      playersPerTeam,
+      createdAt: new Date().toISOString()
     };
     
-    const json = JSON.stringify(roomConfig);
-    const base64 = Buffer.from(json).toString('base64');
-    const roomId = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+    await setRoomConfig(roomId, roomConfig);
 
     // Store creator in Redis as host
     let players = [];
@@ -30,7 +31,7 @@ export default async function handler(req, res) {
       }, true); // Mark as host
     }
 
-    // Return room data reconstructed from encoded ID
+    // Return room data
     const roomData = {
       id: roomId,
       scenario,
@@ -38,7 +39,7 @@ export default async function handler(req, res) {
       playersPerTeam,
       players: players,
       status: 'waiting',
-      createdAt: roomConfig.t,
+      createdAt: roomConfig.createdAt,
       hostId: creatorId, // Track who created the room
       draftState: null
     };
