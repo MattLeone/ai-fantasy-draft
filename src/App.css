@@ -1026,6 +1026,48 @@
   border-left: 4px solid #4299e1;
 }
 
+.share-room {
+  background: #f0f4f8;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border-left: 4px solid #4299e1;
+  margin-bottom: 2rem;
+}
+
+.share-room h4 {
+  margin: 0 0 0.5rem 0;
+  color: #2d3748;
+}
+
+.share-room p {
+  margin: 0 0 1rem 0;
+  color: #4a5568;
+  font-size: 0.9rem;
+}
+
+.share-link-container {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.share-link-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 0.875rem;
+  background: white;
+  color: #4a5568;
+  cursor: pointer;
+}
+
+.share-link-input:focus {
+  outline: none;
+  border-color: #4299e1;
+}
+
 .results-actions {
   text-align: center;
   margin-top: 3rem;

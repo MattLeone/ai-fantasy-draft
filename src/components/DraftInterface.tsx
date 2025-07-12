@@ -54,7 +54,7 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
       hasGeneratedRef.current = true; // Mark as generated to prevent re-runs
       loadAIGeneratedPlayers();
     }
-  }, [draftState?.availablePlayers?.length, settings.mode]);
+  }, [draftState, settings.mode]); // Removed .length dependency to prevent re-runs
 
   const loadDraftState = async (roomId: string) => {
     try {
@@ -83,8 +83,12 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
   };
 
   const loadAIGeneratedPlayers = async () => {
-    if (isGeneratingRef.current) return;
+    if (isGeneratingRef.current || hasGeneratedRef.current) {
+      console.log('Skipping AI generation - already in progress or completed');
+      return;
+    }
     
+    console.log('Starting AI player generation...');
     isGeneratingRef.current = true;
     try {
       const players = await generatePlayers(
@@ -98,12 +102,14 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
         const updatedState = await storeGeneratedPlayers(roomId, players);
         setDraftState(updatedState);
         setAvailablePlayers(players);
+        console.log('AI players generated and stored successfully');
       } else {
         setAvailablePlayers(players);
       }
     } catch (err) {
       setError('Failed to generate players');
       console.error('Failed to generate players:', err);
+      hasGeneratedRef.current = false; // Reset on error to allow retry
     } finally {
       isGeneratingRef.current = false;
     }
@@ -194,6 +200,14 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
         <h2>🏆 {settings.scenario.name} Draft</h2>
         <div className="scenario-description">
           <p>{settings.scenario.description}</p>
+        </div>
+        <div className="evaluation-criteria">
+          <h4>🎯 Draft Strategy - Evaluation Criteria:</h4>
+          <ul>
+            {settings.scenario.evaluationCriteria.map((criteria, index) => (
+              <li key={index}>{criteria}</li>
+            ))}
+          </ul>
         </div>
         <div className="draft-info">
           <div className="round-info">

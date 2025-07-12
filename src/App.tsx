@@ -224,9 +224,37 @@ function App() {
           
           {room.status === 'waiting' && (
             <div>
+              <div className="share-room">
+                <h4>📤 Invite a Friend</h4>
+                <p>Share this link with a friend to join the battle:</p>
+                <div className="share-link-container">
+                  <input 
+                    type="text" 
+                    value={window.location.href}
+                    readOnly
+                    className="share-link-input"
+                    onClick={(e) => (e.target as HTMLInputElement).select()}
+                  />
+                  <button 
+                    className="btn btn-secondary"
+                    onClick={(e) => {
+                      navigator.clipboard.writeText(window.location.href);
+                      // Show temporary feedback
+                      const btn = e.target as HTMLButtonElement;
+                      const originalText = btn.textContent;
+                      btn.textContent = '✓ Copied!';
+                      setTimeout(() => {
+                        btn.textContent = originalText;
+                      }, 2000);
+                    }}
+                  >
+                    📋 Copy Link
+                  </button>
+                </div>
+              </div>
               <div className="waiting-indicator">
                 <div className="pulse-dot"></div>
-                <span>Waiting for host to start the battle...</span>
+                <span>Waiting for someone to join the battle...</span>
               </div>
               {import.meta.env.DEV && (
                 <button 
