@@ -9,7 +9,7 @@ interface DraftInterfaceProps {
   onDraftComplete: (teams: Team[]) => void;
 }
 
-const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, teams, onDraftComplete }) => {
+const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComplete }) => {
   // Multiplayer draft state
   const [draftState, setDraftState] = useState<any>(null);
   const [availablePlayers, setAvailablePlayers] = useState<Player[]>([]);
@@ -19,7 +19,7 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, teams, onDraf
   const [pickingPlayer, setPickingPlayer] = useState<string | null>(null); // Track which player is being picked
   const isGeneratingRef = useRef(false);
   const hasGeneratedRef = useRef(false);
-  const pollingRef = useRef<NodeJS.Timeout | null>(null);
+  const pollingRef = useRef<number | null>(null);
   
   const { generatePlayers, isLoading: generatingPlayers } = useClaudeAPI();
   const { getDraftStatus, makeDraftPick, storeGeneratedPlayers, playerId } = useRoom();
@@ -170,8 +170,9 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, teams, onDraf
     const currentTeam = draftState.teams[draftState.currentTeamIndex];
     return currentTeam?.name || `Team ${draftState.currentTeamIndex + 1}`;
   };
-  const getMyTeam = () => draftState?.teams.find((team: any) => team.owner === playerId);
-  const getOpponentTeam = () => draftState?.teams.find((team: any) => team.owner !== playerId);
+  // Helper functions for potential future use
+  // const getMyTeam = () => draftState?.teams.find((team: any) => team.owner === playerId);
+  // const getOpponentTeam = () => draftState?.teams.find((team: any) => team.owner !== playerId);
 
   // Loading state
   if (!draftState) {
