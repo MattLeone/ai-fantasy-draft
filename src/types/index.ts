@@ -38,11 +38,10 @@ export interface BattleResult {
   winner: string; // team id
   score: Record<string, number>; // team id -> score
   explanation: string;
-  breakdown: {
-    criteria: string;
-    teamScores: Record<string, number>;
-    reasoning: string;
-  }[];
+  keyMoments?: {
+    title: string;
+    description: string;
+  }[]; // Dramatic story moments from the battle
 }
 
 export interface DraftSettings {
@@ -52,4 +51,4 @@ export interface DraftSettings {
   scenario: Scenario;
 }
 
-export type DraftPhase = 'setup' | 'drafting' | 'battle' | 'results';
+export type DraftPhase = 'setup' | 'drafting' | 'draft-complete' | 'battle' | 'results';

@@ -17,39 +17,23 @@ export const predefinedScenarios: Scenario[] = [
     promptTemplate: 'gladiator_arena'
   },
   {
-    id: 'end_of_world',
-    name: 'The Last Sanctuary',
-    description: 'Civilization has collapsed. Two rival bunkers discover they each have limited resources and failing life support systems. Teams compete to see whose shelter can survive the longest through superior resource management, strategic decisions, and crisis leadership.',
+    id: 'survive_hell',
+    name: 'Survive in Hell',
+    description: 'Both teams are cast into the depths of Hell itself. Demons, fire, brimstone, and endless torment await. Victory goes to whichever team can survive the longest in this realm of eternal punishment and supernatural horror.',
     category: 'survival',
     maxPlayers: 4,
     evaluationCriteria: [
-      'Resource management and rationing strategies',
-      'Crisis leadership and group morale',
-      'Technical problem-solving under pressure',
-      'Long-term planning and sustainability',
-      'Conflict resolution and team cohesion'
+      'Physical and mental resilience under extreme conditions',
+      'Adaptation to supernatural threats and environments',
+      'Resource management in a hostile realm',
+      'Team cohesion under psychological pressure',
+      'Creative problem-solving against demonic forces'
     ],
-    promptTemplate: 'end_of_world',
-    teamRoles: ['Bunker Alpha Survivors', 'Bunker Beta Survivors']
+    promptTemplate: 'survive_hell',
+    teamRoles: ['The Damned', 'The Forsaken']
   },
   {
-    id: 'time_detective',
-    name: 'The Temporal Crime Scene',
-    description: 'History is being sabotaged across multiple timelines. One team plays master criminals executing elaborate time heists and paradoxes. The other team are time cops trying to stop them and repair the timeline. Can the criminals break history before the detectives catch them?',
-    category: 'intelligence',
-    maxPlayers: 3,
-    evaluationCriteria: [
-      'Strategic planning and execution',
-      'Understanding of cause-and-effect across time',
-      'Creative problem-solving under pressure',
-      'Historical knowledge and cultural awareness',
-      'Ability to predict and counter opponent moves'
-    ],
-    promptTemplate: 'time_detective',
-    teamRoles: ['Time Criminals', 'Time Police']
-  },
-  {
-    id: 'seduce_cleopatra',
+    id: 'woo_cleopatra',
     name: 'Win Cleopatra\'s Heart',
     description: 'The most powerful and intelligent woman in ancient history seeks a worthy partner. Teams must court Cleopatra VII through wit, charm, political acumen, and genuine connection. She has rejected Caesar and Antony before - what makes you different?',
     category: 'social',
@@ -61,70 +45,39 @@ export const predefinedScenarios: Scenario[] = [
       'Cultural sensitivity and emotional intelligence',
       'Authenticity and genuine connection'
     ],
-    promptTemplate: 'seduce_cleopatra'
+    promptTemplate: 'woo_cleopatra'
   },
   {
-    id: 'gods_canvas',
-    name: 'Paint for the Gods',
-    description: 'Mount Olympus announces a divine art competition. The winner becomes the new Muse of Creativity. Teams must create a masterpiece that captures the essence of human experience and moves immortal beings to tears.',
-    category: 'creative',
+    id: 'steal_mona_lisa',
+    name: 'Steal the Mona Lisa',
+    description: 'The Louvre\'s security is legendary, but the Mona Lisa must be stolen. Teams have 48 hours to plan and execute the perfect heist. Cameras, guards, laser grids, and international authorities stand between you and the world\'s most famous painting.',
+    category: 'strategy',
     maxPlayers: 4,
     evaluationCriteria: [
-      'Artistic vision and originality',
-      'Technical mastery of chosen medium',
-      'Emotional depth and human truth',
-      'Innovation that transcends mortal limitations',
-      'Collaborative synergy between team members'
+      'Stealth and infiltration capabilities',
+      'Strategic planning and execution',
+      'Technical expertise and problem-solving',
+      'Team coordination under pressure',
+      'Adaptability when plans go wrong'
     ],
-    promptTemplate: 'gods_canvas',
-    teamRoles: ['The Visionaries', 'The Masters']
+    promptTemplate: 'steal_mona_lisa',
+    teamRoles: ['The Crew', 'The Syndicate']
   },
   {
-    id: 'corporate_takeover',
-    name: 'Hostile Takeover of Evil Corp',
-    description: 'Megalomaniac Industries controls 60% of the global economy and is planning something sinister. Your startup has 6 months to outmaneuver them, expose their conspiracy, and save capitalism from itself. David vs. Goliath has never had higher stakes.',
-    category: 'strategy',
-    maxPlayers: 3,
+    id: 'escape_maze',
+    name: 'Escape the Maze',
+    description: 'Both teams wake up in an enormous, ever-shifting labyrinth designed by an ancient intelligence. The maze changes its layout every hour, contains deadly traps, impossible physics, and mind-bending puzzles. Victory goes to whichever team can navigate to the center first and claim the exit key.',
+    category: 'intelligence',
+    maxPlayers: 4,
     evaluationCriteria: [
-      'Business strategy and market manipulation',
-      'Corporate espionage and information warfare',
-      'Public relations and narrative control',
-      'Financial innovation and resource allocation',
-      'Ethical leadership under corrupt pressures'
+      'Spatial reasoning and navigation skills',
+      'Pattern recognition and puzzle-solving ability',
+      'Memory and information retention',
+      'Adaptability to changing conditions',
+      'Leadership and decision-making under pressure'
     ],
-    promptTemplate: 'corporate_takeover'
-  },
-  {
-    id: 'lol_rift',
-    name: 'Clash on the Rift',
-    description: 'Two teams of five face off in the ultimate MOBA showdown on Summoner\'s Rift. Victory requires perfect coordination, strategic thinking, mechanical skill, and the ability to adapt under pressure. Destroy the enemy Nexus before they destroy yours.',
-    category: 'strategy',
-    maxPlayers: 5,
-    evaluationCriteria: [
-      'Strategic coordination and team fighting',
-      'Individual mechanical skill and game sense',
-      'Adaptability and decision-making under pressure',
-      'Communication and team synergy',
-      'Map awareness and objective control'
-    ],
-    promptTemplate: 'lol_rift',
-    teamRoles: ['Blue Side Team', 'Red Side Team']
-  },
-  {
-    id: 'afterlife_trial',
-    name: 'Judgment of Souls',
-    description: 'Humanity faces the ultimate tribunal with every deity from every religion as judges. One team serves as prosecutor, arguing why humanity deserves extinction for its sins and failures. The other team serves as defense, arguing why humanity deserves redemption and a second chance.',
-    category: 'philosophy',
-    maxPlayers: 3,
-    evaluationCriteria: [
-      'Moral reasoning and ethical frameworks',
-      'Rhetorical skill and persuasive argumentation',
-      'Understanding of human nature and history',
-      'Ability to address counterarguments effectively',
-      'Wisdom and philosophical depth'
-    ],
-    promptTemplate: 'afterlife_trial',
-    teamRoles: ['Prosecution Team', 'Defense Team']
+    promptTemplate: 'escape_maze',
+    teamRoles: ['The Lost', 'The Wanderers']
   }
 ];
 

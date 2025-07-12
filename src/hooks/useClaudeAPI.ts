@@ -46,137 +46,24 @@ export const useClaudeAPI = () => {
     try {
       console.log('Generating players for:', scenario, 'Count:', count);
       
-      // Generate MORE characters than needed for better variety
-      const extraCharacters = Math.ceil(count * 0.6); // Generate 60% more
-      const totalToGenerate = count + extraCharacters;
+      // Generate large pool for variety
+      const totalToGenerate = count * 3; // Generate 3x more, randomly select what we need
       
-      // Scenario-specific character types that make sense (avoid specific names)
-      const scenarioGuidance = {
-        'The Colosseum Awaits': {
-          focus: 'warriors, fighters, tactical combatants, crowd entertainers, and survival specialists',
-          traits: 'combat skills, showmanship, tactical thinking, physical prowess, crowd appeal'
-        },
-        'The Last Sanctuary': {
-          focus: 'survivalists, engineers, medical professionals, crisis leaders, and resourceful innovators',
-          traits: 'survival skills, technical expertise, leadership under pressure, resourcefulness, team coordination'
-        },
-        'The Temporal Crime Scene': {
-          focus: 'detectives, strategic masterminds, historical experts, pattern analyzers, and time theorists',
-          traits: 'deductive reasoning, strategic thinking, historical knowledge, problem-solving, analytical minds'
-        },
-        'Win Cleopatra\'s Heart': {
-          focus: 'charismatic diplomats, poets, cultural figures, smooth negotiators, and legendary charmers',
-          traits: 'charisma, cultural sophistication, diplomatic skills, artistic talent, emotional intelligence'
-        },
-        'Paint for the Gods': {
-          focus: 'artists, musicians, writers, creative visionaries, and innovative minds',
-          traits: 'artistic vision, creative innovation, emotional expression, technical mastery, inspirational ability'
-        },
-        'Hostile Takeover of Evil Corp': {
-          focus: 'business strategists, corporate leaders, investigators, negotiators, and competitive masterminds',
-          traits: 'business acumen, strategic planning, investigative skills, competitive drive, market understanding'
-        },
-        'Judgment of Souls': {
-          focus: 'moral philosophers, great orators, ethical thinkers, spiritual leaders, and persuasive debaters',
-          traits: 'moral reasoning, rhetorical skill, ethical frameworks, philosophical depth, persuasive argumentation'
-        },
-        'Clash on the Rift': {
-          focus: 'strategic gamers, competitive athletes, tactical commanders, quick-thinking adapters, and team coordinators',
-          traits: 'strategic thinking, quick reflexes, team coordination, competitive drive, adaptability under pressure'
-        }
-      };
 
-      // Enhanced variety seeds with more entertainment focus
-      const varietySeeds = [
-        'Include mix of historical legends, pop culture icons, and compelling fictional characters',
-        'Balance serious strategic picks with entertaining TV/movie personalities and game characters', 
-        'Mix legendary figures with beloved cartoon characters and video game heroes',
-        'Include diverse mix of respected leaders, animated characters, and fantasy figures',
-        'Combine historical powerhouses with iconic entertainment personalities and mythical beings',
-        'Mix cultural legends with memorable cartoon/anime characters and literary figures',
-        'Include both obvious strategic choices and surprisingly entertaining wildcard characters',
-        'Balance different time periods with modern entertainment icons and classic archetypes'
-      ];
+      const prompt = `Generate ${totalToGenerate} random characters from any source imaginable.
 
-      // Add more entertainment-focused categories
-      const entertainmentBoosts = [
-        'Include some beloved cartoon characters, video game heroes, or TV personalities',
-        'Mix in memorable animated characters, sitcom figures, or gaming legends', 
-        'Add entertaining characters from movies, TV shows, cartoons, or video games',
-        'Include some fun pop culture figures alongside serious strategic picks',
-        'Mix iconic entertainment characters with historical and mythical figures',
-        'Add memorable characters from animation, gaming, or popular media'
-      ];
+DO NOT try to match them to the scenario "${scenario}" - just generate interesting variety.
 
-      // Get scenario-specific guidance
-      const currentScenario = scenarioGuidance[scenario as keyof typeof scenarioGuidance];
-      const scenarioFocus = currentScenario?.focus || 'diverse and interesting characters';
-      const scenarioTraits = currentScenario?.traits || 'various relevant abilities';
+Mix strong and weak, famous and obscure, serious and silly, good and bad. Include some that may have second order benefits or drawbacks.
 
-      // Random elements for variety
-      const selectedSeed = varietySeeds[Math.floor(Math.random() * varietySeeds.length)];
-      const entertainmentBoost = entertainmentBoosts[Math.floor(Math.random() * entertainmentBoosts.length)];
-      
-      // Enhanced randomness with multiple entropy sources
-      const timestamp = Date.now();
-      const randomSalt = (timestamp + Math.random() * 10000).toString().slice(-6);
-      const varietyBoost = Math.random() > 0.5 ? 'Emphasize unexpected but logical choices' : 'Focus on crowd-pleasing recognizable figures';
-      const culturalFocus = ['Western history', 'Eastern traditions', 'Global perspectives', 'Ancient civilizations', 'Modern era', 'Mixed time periods'][Math.floor(Math.random() * 6)];
-
-      const prompt = `Generate ${totalToGenerate} diverse characters specifically suited for a "${scenario}" scenario. 
-
-SCENARIO FOCUS: Prioritize ${scenarioFocus}
-
-KEY TRAITS NEEDED: ${scenarioTraits}
-
-VARIETY DIRECTIVE: ${selectedSeed}
-
-ENTERTAINMENT FACTOR: ${entertainmentBoost}
-
-CULTURAL EMPHASIS: Draw from ${culturalFocus}
-
-APPROACH: ${varietyBoost}
-
-RANDOMNESS SEED: ${randomSalt}
-
-CRITICAL REQUIREMENTS:
-- Characters MUST be well-suited to this specific scenario
-- Include mix of: historical figures, fictional characters, mythical beings, relevant animals, AND entertaining pop culture figures
-- Balance serious strategic picks with fun entertainment characters (cartoons, video games, TV shows, movies)
-- Examples of entertaining picks: Master Chief, Peter Griffin, Tyrion Lannister, Mario, Batman, Gordon Ramsay, SpongeBob, etc.
-- Ensure each character brings something valuable to THIS specific challenge
-- Mix different time periods, cultures, and entertainment mediums
-- Avoid repetitive or predictable picks - be creative and varied
-- Include characters that will make people smile or get excited to see
-- Balance respected figures with beloved entertainment personalities
-
-CHARACTER TYPES TO INCLUDE:
-- Historical legends and cultural icons
-- Movie/TV characters and animated personalities  
-- Video game heroes and literary figures
-- Mythical beings and legendary creatures
-- Relevant animals and unique concepts
-- Entertainment personalities and cartoon characters
-
-FORMAT: Each character should be genuinely relevant to the scenario while being recognizable and entertaining
+Provide neutral descriptions.
 
 Format as JSON array:
 [
-  {"name": "Character Name", "description": "Description emphasizing why they're perfect for THIS scenario", "type": "historical|fictional|mythical|animal|other"}
-]
+  {"name": "Character Name", "description": "Neutral description of their abilities and background", "type": "historical|fictional|mythical|animal|other"}
+]`;
 
-Make it both strategically sound AND entertaining!`;
-
-      console.log('Enhanced generation:', { 
-        scenario, 
-        totalToGenerate, 
-        finalCount: count,
-        selectedSeed, 
-        entertainmentBoost, 
-        varietyBoost, 
-        randomSalt 
-      });
-      console.log('Sending request to API...');
+      console.log('Generating random characters:', totalToGenerate, 'for scenario:', scenario);
       
       const response = await fetch('/api/generate-players', {
         method: 'POST',
@@ -195,17 +82,13 @@ Make it both strategically sound AND entertaining!`;
       }
 
       const data = await response.json();
-      console.log('API response received');
-      console.log('Response text length:', data.responseText.length);
-      
       const allPlayers = parseGeneratedPlayers(data.responseText);
-      console.log('Total generated players:', allPlayers.length);
       
-      // Randomly select the number we actually need
+      // Randomly select the number we actually need from the large pool
       const shuffledPlayers = [...allPlayers].sort(() => Math.random() - 0.5);
       const selectedPlayers = shuffledPlayers.slice(0, count);
       
-      console.log('Final selected players count:', selectedPlayers.length);
+      console.log(`Selected ${selectedPlayers.length} from ${allPlayers.length} generated characters`);
       
       return selectedPlayers;
     } catch (err) {
@@ -237,7 +120,7 @@ ${team.players.map(p => `- ${p.name}${p.description ? ': ' + p.description : ''}
   // Get team names for consistent JSON response
   const teamNames = teams.map(team => team.name);
 
-  return `You are judging a fantasy battle simulation. Analyze this matchup objectively and fairly.
+  return `You are a master storyteller and battle commentator. Create a VIVID, DRAMATIC simulation of this conflict with cinematic detail.
 
 **Scenario**: ${scenario.name}
 ${scenario.description}
@@ -245,32 +128,41 @@ ${scenario.description}
 **Teams**:
 ${teamsDescription}
 
-**Evaluation Criteria**: ${scenario.evaluationCriteria.join(', ')}
+**Your Mission**: 
+Tell the story of this battle through SPECIFIC, DRAMATIC moments. Focus on creative character interactions, unexpected strategies, and cinematic turning points. Be imaginative about how these characters would actually work together or clash.
 
-**Additional Considerations**:
-- Consider team chemistry: Would these characters work well together or clash?
-- Factor in leadership dynamics and personality conflicts
-- Teams with great synergy might punch above their weight
-- Teams with major conflicts might underperform despite individual talent
-- Most teams should have neutral chemistry - only apply significant bonuses/penalties for exceptional cases
+**Storytelling Requirements**:
+- Create 4-6 CONCISE key moments (2-3 sentences each)
+- Show exactly HOW characters use their unique abilities
+- Include surprising character synergies and creative applications  
+- Highlight tactical decisions and adaptations
+- Keep descriptions tight and impactful - no lengthy exposition
+- Consider realistic team chemistry - who leads? who clashes? who surprises everyone?
 
-**Creative Interpretation Bonus**: Reward creative applications of each character's abilities. Consider unexpected ways their skills could apply to this scenario. Don't automatically favor obviously powerful characters - think about how seemingly weaker characters might use cunning, unique perspectives, or unconventional approaches to succeed.
-
-Please analyze this matchup and determine the winner. Be completely objective - don't favor any team based on order mentioned or personal preference. Consider each team's strengths and weaknesses for this specific scenario.
-
-Provide your response in this JSON format:
+Provide your response in this format:
 {
   "winner": "${teamNames[0]}" or "${teamNames[1]}",
-  "explanation": "detailed reasoning for your decision (mention any significant team chemistry factors and creative applications of abilities)",
+  "explanation": "A compelling narrative explaining WHY this team won. Focus on the decisive factors and overall story arc.",
   "teamScores": {
     "${teamNames[0]}": score_out_of_100,
     "${teamNames[1]}": score_out_of_100
   },
-  "breakdown": [
+  "keyMoments": [
     {
-      "criteria": "criteria_name",
-      "teamScores": {"${teamNames[0]}": score, "${teamNames[1]}": score},
-      "reasoning": "explanation including any synergy effects and creative interpretations"
+      "title": "Opening Gambit",
+      "description": "Detailed description of how the battle begins, which characters take initiative, first tactical moves"
+    },
+    {
+      "title": "The Unexpected Play", 
+      "description": "A surprising character does something creative or a hidden synergy emerges"
+    },
+    {
+      "title": "Turning Point",
+      "description": "The moment that shifts momentum, including specific character actions and decisions"
+    },
+    {
+      "title": "Final Clash",
+      "description": "The climactic moment that decides the victor, with vivid detail of the decisive actions"
     }
   ]
 }`;
@@ -288,7 +180,7 @@ function parseClaudeResponse(responseText: string, battle: Battle): BattleResult
       winner: battle.teams.find(t => t.name === parsed.winner)?.id || battle.teams[0].id,
       score: parsed.teamScores || {},
       explanation: parsed.explanation || 'No explanation provided',
-      breakdown: parsed.breakdown || []
+      keyMoments: parsed.keyMoments || []
     };
   } catch (error) {
     console.error('Failed to parse Claude response:', error);
@@ -297,7 +189,7 @@ function parseClaudeResponse(responseText: string, battle: Battle): BattleResult
       winner: battle.teams[0].id,
       score: {},
       explanation: responseText,
-      breakdown: []
+      keyMoments: []
     };
   }
 }
@@ -310,75 +202,29 @@ interface GeneratedPlayerData {
 
 function parseGeneratedPlayers(responseText: string): Player[] {
   try {
-    console.log('=== PARSING START ===');
-    console.log('Raw response length:', responseText.length);
-    console.log('Raw response preview:', responseText.substring(0, 200) + '...');
+    // Remove markdown code blocks
+    const cleanText = responseText.trim()
+      .replace(/^```json\s*/i, '')
+      .replace(/^```\s*/, '')
+      .replace(/\s*```$/m, '');
     
-    // Handle empty or very short responses
-    if (!responseText || responseText.trim().length < 10) {
-      console.error('Response is empty or too short');
-      return [];
-    }
-    
-    // Step 1: Clean up the response - remove markdown code blocks
-    let cleanText = responseText.trim();
-    
-    // Remove ```json and ``` markers more aggressively
-    cleanText = cleanText.replace(/^```json\s*/i, '');
-    cleanText = cleanText.replace(/^```\s*/, '');
-    cleanText = cleanText.replace(/\s*```$/m, '');
-    
-    console.log('After markdown removal length:', cleanText.length);
-    
-    // Step 2: Find the JSON array boundaries
+    // Find JSON array
     const startBracket = cleanText.indexOf('[');
     const lastBracket = cleanText.lastIndexOf(']');
     
-    console.log('Start bracket at:', startBracket, 'End bracket at:', lastBracket);
-    
     if (startBracket === -1 || lastBracket === -1 || startBracket >= lastBracket) {
-      console.error('No valid JSON array found in response');
-      console.error('Full cleaned text:', cleanText);
-      // Don't return empty array, let's try a fallback
-      
-      // Fallback: try the original regex approach
-      const jsonMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/) || responseText.match(/\[[\s\S]*\]/);
-      if (jsonMatch) {
-        const fallbackJson = jsonMatch[1] || jsonMatch[0];
-        console.log('Trying fallback parsing with:', fallbackJson.substring(0, 100) + '...');
-        try {
-          const parsed = JSON.parse(fallbackJson);
-          if (Array.isArray(parsed)) {
-            return parsed.map((p: GeneratedPlayerData, index: number) => ({
-              id: `generated_${Date.now()}_${index}`,
-              name: p.name || `Player ${index + 1}`,
-              description: p.description || '',
-              type: 'ai_generated' as const
-            }));
-          }
-        } catch (fallbackError) {
-          console.error('Fallback parsing also failed:', fallbackError);
-        }
-      }
-      
+      console.error('Invalid JSON structure in response');
       return [];
     }
     
     const jsonStr = cleanText.substring(startBracket, lastBracket + 1);
-    console.log('Extracted JSON length:', jsonStr.length);
-    console.log('JSON preview:', jsonStr.substring(0, 200) + '...');
-    
-    // Step 3: Parse the JSON
     const parsed = JSON.parse(jsonStr);
     
     if (!Array.isArray(parsed)) {
-      console.error('Parsed result is not an array:', typeof parsed);
+      console.error('Response is not an array');
       return [];
     }
     
-    console.log('Successfully parsed', parsed.length, 'players');
-    
-    // Step 4: Convert to Player objects
     return parsed.map((p: GeneratedPlayerData, index: number) => ({
       id: `generated_${Date.now()}_${index}`,
       name: p.name || `Player ${index + 1}`,
@@ -388,7 +234,6 @@ function parseGeneratedPlayers(responseText: string): Player[] {
     
   } catch (error) {
     console.error('Failed to parse generated players:', error);
-    console.error('Original response was:', responseText);
     return [];
   }
 }

@@ -105,34 +105,24 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ battle, result, onResta
         <h3>AI Analysis</h3>
         
         <div className="explanation-section">
-          <h4>Battle Overview</h4>
+          <h4>Battle Report</h4>
           <p className="explanation-text">{result.explanation}</p>
         </div>
 
-        {result.breakdown && result.breakdown.length > 0 && (
-          <div className="criteria-breakdown">
-            <h4>Detailed Breakdown</h4>
-            {result.breakdown.map((item, index) => (
-              <div key={index} className="criteria-item">
-                <h5>{item.criteria}</h5>
-                <p className="criteria-reasoning">{item.reasoning}</p>
-                
-                <div className="criteria-scores">
-                  {Object.entries(item.teamScores).map(([teamName, score]) => (
-                    <div key={teamName} className="team-criteria-score">
-                      <span className="team-name">{teamName}</span>
-                      <div className="score-bar-small">
-                        <div 
-                          className="score-fill-small"
-                          style={{ width: `${(Number(score) / 100) * 100}%` }}
-                        />
-                      </div>
-                      <span className="score-value">{score}</span>
-                    </div>
-                  ))}
+        {result.keyMoments && result.keyMoments.length > 0 && (
+          <div className="key-moments-section">
+            <h4>⚡ Key Moments</h4>
+            <div className="moments-list">
+              {result.keyMoments.map((moment, index) => (
+                <div key={index} className="moment-item">
+                  <div className="moment-header">
+                    <div className="moment-number">{index + 1}</div>
+                    <h5 className="moment-title">{typeof moment === 'string' ? `Moment ${index + 1}` : moment.title}</h5>
+                  </div>
+                  <div className="moment-text">{typeof moment === 'string' ? moment : moment.description}</div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 
@@ -149,9 +139,17 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ battle, result, onResta
       {showConfetti && <div className="confetti-container" />}
       
       <div className="card">
-        {renderWinnerAnnouncement()}
-        {renderTeamResults()}
-        {renderDetailedAnalysis()}
+        <div className="results-content">
+          {renderWinnerAnnouncement()}
+          
+          <div className="results-section">
+            {renderTeamResults()}
+          </div>
+          
+          <div className="results-section">
+            {renderDetailedAnalysis()}
+          </div>
+        </div>
 
         <div className="results-actions">
           <button 
@@ -160,19 +158,6 @@ const ResultsDisplay: React.FC<ResultsDisplayProps> = ({ battle, result, onResta
           >
             Start New Battle 🔄
           </button>
-          
-          <div className="share-section">
-            <h4>Share Your Results</h4>
-            <p>Tell your friends about this epic battle!</p>
-            <div className="share-buttons">
-              <button className="btn btn-secondary">
-                📋 Copy Results
-              </button>
-              <button className="btn btn-secondary">
-                📸 Screenshot
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>

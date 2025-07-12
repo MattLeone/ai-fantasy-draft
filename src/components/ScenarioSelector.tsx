@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type{ Scenario, DraftSettings } from '../types';
+import { useRoom } from '../hooks/useRoom';
 
 interface ScenarioSelectorProps {
   scenarios: Scenario[];
@@ -8,13 +9,42 @@ interface ScenarioSelectorProps {
 
 const ScenarioSelector: React.FC<ScenarioSelectorProps> = ({ scenarios, onScenarioSelect }) => {
   const [selectedScenario, setSelectedScenario] = useState<Scenario | null>(null);
-  const [draftMode, setDraftMode] = useState<'free_draft' | 'ai_curated'>('free_draft');
-  const [teamCount, setTeamCount] = useState(2);
+  const [draftMode, setDraftMode] = useState<'free_draft' | 'ai_curated'>('ai_curated');
   const [playersPerTeam, setPlayersPerTeam] = useState(3);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const { room, isLoading, error, createRoom } = useRoom();
+
+  // Determine room state based on room data
+  const getRoomState = () => {
+    if (!shareUrl) return 'none';
+    if (isLoading && !room) return 'created';
+    if (shareUrl && room) {
+      if (room.status === 'waiting') return 'waiting';
+      if (room.status === 'ready') return 'ready';
+    }
+    // If we have a shareUrl but no room data, assume it's waiting
+    if (shareUrl && !room && !isLoading) return 'waiting';
+    return 'none';
+  };
 
   const handleScenarioClick = (scenario: Scenario) => {
     setSelectedScenario(scenario);
     setPlayersPerTeam(Math.min(playersPerTeam, scenario.maxPlayers));
+  };
+
+
+  const handleCreateRoom = async () => {
+    if (!selectedScenario) return;
+
+    try {
+      const result = await createRoom(selectedScenario, draftMode, playersPerTeam);
+      
+      // Navigate creator to the room URL immediately
+      window.location.href = result.shareUrl;
+    } catch (error) {
+      console.error('Failed to create room:', error);
+      setShareUrl(null);
+    }
   };
 
   const handleStartDraft = () => {
@@ -22,12 +52,19 @@ const ScenarioSelector: React.FC<ScenarioSelectorProps> = ({ scenarios, onScenar
 
     const settings: DraftSettings = {
       mode: draftMode,
-      teamCount,
+      teamCount: 2, // Always 2 players
       playersPerTeam,
       scenario: selectedScenario
     };
 
     onScenarioSelect(settings);
+  };
+
+  const copyRoomLink = () => {
+    if (shareUrl) {
+      const roomLink = `${window.location.origin}${shareUrl}`;
+      navigator.clipboard.writeText(roomLink);
+    }
   };
 
   const getCategoryEmoji = (category: string) => {
@@ -135,14 +172,11 @@ const ScenarioSelector: React.FC<ScenarioSelectorProps> = ({ scenarios, onScenar
             </div>
 
             <div className="setting-group">
-              <label>Number of Teams</label>
-              <select 
-                value={2} 
-                disabled
-                onChange={(e) => setTeamCount(parseInt(e.target.value))}
-              >
-                <option value={2}>2 Teams</option>
-              </select>
+              <label>Game Type</label>
+              <div className="game-type-info">
+                <span>2-Player Draft Battle</span>
+                <small>Draft against another player online</small>
+              </div>
             </div>
 
             <div className="setting-group">
@@ -161,19 +195,78 @@ const ScenarioSelector: React.FC<ScenarioSelectorProps> = ({ scenarios, onScenar
           <div className="draft-summary">
             <h3>Draft Summary</h3>
             <p>
-              <strong>{selectedScenario.name}</strong> - {teamCount} teams with {playersPerTeam} players each
+              <strong>{selectedScenario.name}</strong> - 2 players with {playersPerTeam} characters each
             </p>
             <p>
               Mode: <strong>{draftMode === 'free_draft' ? 'Free Draft' : 'AI Curated'}</strong>
             </p>
           </div>
 
-          <button 
-            className="btn btn-primary btn-large"
-            onClick={handleStartDraft}
-          >
-            Start Draft! 🚀
-          </button>
+          {error && (
+            <div className="error-message">
+              <p>Error: {error}</p>
+            </div>
+          )}
+
+          {getRoomState() === 'none' && (
+            <button 
+              className="btn btn-primary btn-large"
+              onClick={handleCreateRoom}
+            >
+              Create Battle Room 🚀
+            </button>
+          )}
+
+          {getRoomState() === 'created' && (
+            <div className="room-creation">
+              <div className="loading">
+                <div className="spinner"></div>
+                <p>Creating battle room...</p>
+              </div>
+            </div>
+          )}
+
+          {getRoomState() === 'waiting' && (
+            <div className="room-creation">
+              <div className="room-link-section">
+                <h3>Battle Room Created!</h3>
+                <p>Share this link with your opponent:</p>
+                <div className="room-link">
+                  <input 
+                    type="text" 
+                    readOnly 
+                    value={shareUrl ? `${window.location.origin}${shareUrl}` : ''}
+                    className="room-link-input"
+                  />
+                  <button onClick={copyRoomLink} className="btn btn-secondary">
+                    📋 Copy Link
+                  </button>
+                </div>
+                <p className="room-instructions">
+                  Send this link to your opponent. Waiting for them to join...
+                </p>
+                <div className="waiting-indicator">
+                  <div className="pulse-dot"></div>
+                  <span>Waiting for opponent...</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {getRoomState() === 'ready' && (
+            <div className="room-creation">
+              <div className="room-ready">
+                <h3>✅ Opponent Joined!</h3>
+                <p>Both players are ready. Time to draft!</p>
+                <button 
+                  className="btn btn-success btn-large"
+                  onClick={handleStartDraft}
+                >
+                  Start Draft Battle ⚔️
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
