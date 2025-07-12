@@ -223,7 +223,7 @@
 .evaluation-criteria ul {
   margin: 0.5rem 0 0 0;
   padding-left: 1rem;
-  color: #6b7280;
+  color: #2d3748;
 }
 
 .evaluation-criteria li {
@@ -558,7 +558,7 @@
 
 .player-description {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: #2d3748;
 }
 
 .scenario-info {
@@ -571,7 +571,7 @@
 
 .scenario-description {
   background: #f8fafc;
-  color: #6b7280;
+  color: #2d3748;
   margin-bottom: 1.5rem;
   padding: 1rem;
   border-radius: 8px;
@@ -582,12 +582,12 @@
 
 .evaluation-criteria h4 {
   margin-bottom: 0.5rem;
-  color: #4a90e2;
+  color: #1a202c;
 }
 
 .evaluation-criteria ul {
   margin: 0;
-  color: #6b7280;
+  color: #2d3748;
 }
 
 .battle-controls {
@@ -844,12 +844,12 @@
 }
 
 .team-roster {
-  color: #6b7280;
+  color: #2d3748;
   font-size: 0.875rem;
 }
 
 .player-name {
-  color: #6b7280;
+  color: #2d3748;
 }
 
 .team-score {
@@ -898,7 +898,7 @@
 }
 
 .explanation-text {
-  color: #6b7280;
+  color: #2d3748;
   line-height: 1.6;
   margin: 0;
 }
@@ -1014,7 +1014,7 @@
 }
 
 .moment-text {
-  color: #6b7280;
+  color: #2d3748;
   line-height: 1.5;
   margin-left: 1.75rem;
 }
@@ -1041,7 +1041,7 @@
 
 .share-room p {
   margin: 0 0 1rem 0;
-  color: #6b7280;
+  color: #2d3748;
   font-size: 0.9rem;
 }
 
@@ -1059,7 +1059,7 @@
   font-family: monospace;
   font-size: 0.875rem;
   background: white;
-  color: #6b7280;
+  color: #2d3748;
   cursor: pointer;
 }
 
