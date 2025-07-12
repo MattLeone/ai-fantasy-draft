@@ -51,7 +51,6 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
     if (draftState && settings.mode === 'ai_curated' && 
         draftState.availablePlayers.length === 0 && 
         !isGeneratingRef.current && !hasGeneratedRef.current) {
-      hasGeneratedRef.current = true; // Mark as generated to prevent re-runs
       loadAIGeneratedPlayers();
     }
   }, [draftState, settings.mode]); // Removed .length dependency to prevent re-runs
@@ -90,6 +89,8 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
     
     console.log('Starting AI player generation...');
     isGeneratingRef.current = true;
+    hasGeneratedRef.current = true; // Mark as started here, not in useEffect
+    
     try {
       const players = await generatePlayers(
         settings.scenario.name, 
