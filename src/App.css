@@ -137,9 +137,44 @@
 /* Loading spinner */
 .loading {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2rem;
+  gap: 1rem;
+}
+
+.generation-status {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  border: 2px solid #667eea;
+  text-align: center;
+}
+
+.generation-status .loading {
+  background: linear-gradient(135deg, #667eea20, #764ba220);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 0;
+}
+
+.generation-status p {
+  color: #2d3748 !important;
+  font-weight: 600;
+  margin: 0;
+}
+
+.generation-status p:first-of-type {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.generation-status p:last-of-type {
+  font-size: 0.9rem !important;
+  color: #4a5568 !important;
+  font-weight: 500 !important;
 }
 
 .spinner {
@@ -217,17 +252,47 @@
 }
 
 .evaluation-criteria {
-  font-size: 0.875rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.evaluation-criteria h4 {
+  color: white;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .evaluation-criteria ul {
-  margin: 0.5rem 0 0 0;
-  padding-left: 1rem;
-  color: #2d3748;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
 }
 
 .evaluation-criteria li {
-  margin-bottom: 0.25rem;
+  background: rgba(255, 255, 255, 0.9);
+  color: #2d3748;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.evaluation-criteria li:before {
+  content: "🎯";
+  font-size: 1rem;
+  flex-shrink: 0;
 }
 
 /* Settings Styles */
@@ -415,6 +480,29 @@
   transition: all 0.3s ease;
 }
 
+.team-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.team-owner {
+  font-size: 0.875rem;
+  color: #667eea;
+  font-weight: 600;
+  background: rgba(102, 126, 234, 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+}
+
+.turn-indicator {
+  font-size: 1.2rem;
+  margin-left: 0.5rem;
+}
+
 .team-card.active {
   border-color: #667eea;
   background: #edf2f7;
@@ -580,15 +668,7 @@
   text-align: center;
 }
 
-.evaluation-criteria h4 {
-  margin-bottom: 0.5rem;
-  color: white;
-}
-
-.evaluation-criteria ul {
-  margin: 0;
-  color: #2d3748;
-}
+/* Removed duplicate evaluation-criteria styles - now handled above */
 
 .battle-controls {
   text-align: center;

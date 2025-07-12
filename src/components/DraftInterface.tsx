@@ -300,10 +300,10 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
           <div className="generation-status">
             <div className="loading">
               <div className="spinner"></div>
-              <p>🎲 Draft pool is being generated...</p>
-              <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.5rem' }}>
-                Please wait while the AI creates your player options. This might take a few minutes.
-              </p>
+              <div>
+                <p>🎲 Draft pool is being generated...</p>
+                <p>Please wait while the AI creates your player options. This might take a few minutes.</p>
+              </div>
             </div>
           </div>
         )}
@@ -317,12 +317,14 @@ const DraftInterface: React.FC<DraftInterfaceProps> = ({ settings, onDraftComple
               <div className="ai-players-section">
                 <h4>Available Players</h4>
                 {(generatingPlayers || draftState?.generatingPlayers) ? (
-                  <div className="loading">
-                    <div className="spinner"></div>
-                    <p>🎲 Draft pool is being generated...</p>
-                    <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.5rem' }}>
-                      This might take a few minutes. Both players will see the same pool when ready!
-                    </p>
+                  <div className="generation-status">
+                    <div className="loading">
+                      <div className="spinner"></div>
+                      <div>
+                        <p>🎲 Draft pool is being generated...</p>
+                        <p>This might take a few minutes. Both players will see the same pool when ready!</p>
+                      </div>
+                    </div>
                   </div>
                 ) : availablePlayers.length > 0 ? (
                   <div className="players-grid">
