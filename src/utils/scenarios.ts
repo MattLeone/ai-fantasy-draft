@@ -64,20 +64,23 @@ export const predefinedScenarios: Scenario[] = [
     teamRoles: ['The Crew', 'The Syndicate']
   },
   {
-    id: 'escape_maze',
-    name: 'Escape the Maze',
-    description: 'Both teams wake up in an enormous, ever-shifting labyrinth designed by an ancient intelligence. The maze changes its layout every hour, contains deadly traps, impossible physics, and mind-bending puzzles. Victory goes to whichever team can navigate to the center first and claim the exit key.',
-    category: 'intelligence',
+    id: 'galactic_empire',
+    name: 'Galactic Empire',
+    description: 'Lead your team to colonize the galaxy. Establish settlements, manage resources, explore new worlds, handle alien encounters, and build the most impressive stellar civilization.',
+    category: 'strategy',
     maxPlayers: 4,
     evaluationCriteria: [
-      'Spatial reasoning and navigation skills',
-      'Pattern recognition and puzzle-solving ability',
-      'Memory and information retention',
-      'Adaptability to changing conditions',
-      'Leadership and decision-making under pressure'
+      'Territory expansion and strategic positioning',
+      'Technological advancement and innovation',
+      'Population growth and societal stability',
+      'Resource management and sustainability',
+      'Diplomatic relations with alien species',
+      'Cultural achievements and quality of life',
+      'Military readiness and conflict resolution',
+      'Long-term civilization sustainability'
     ],
-    promptTemplate: 'escape_maze',
-    teamRoles: ['The Lost', 'The Wanderers']
+    promptTemplate: 'galactic_empire',
+    teamRoles: ['The Pioneers', 'The Colonists']
   }
 ];
 
