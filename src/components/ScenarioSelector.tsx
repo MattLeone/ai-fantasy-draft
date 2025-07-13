@@ -122,18 +122,6 @@ const ScenarioSelector: React.FC<ScenarioSelectorProps> = ({ scenarios, onScenar
               <div className="scenario-meta">
                 <span>Max {scenario.maxPlayers} players per team</span>
               </div>
-              
-              <div className="evaluation-criteria">
-                <strong>Key Factors:</strong>
-                <ul>
-                  {scenario.evaluationCriteria.slice(0, 3).map((criteria, index) => (
-                    <li key={index}>{criteria}</li>
-                  ))}
-                  {scenario.evaluationCriteria.length > 3 && (
-                    <li>+ {scenario.evaluationCriteria.length - 3} more...</li>
-                  )}
-                </ul>
-              </div>
             </div>
           ))}
         </div>

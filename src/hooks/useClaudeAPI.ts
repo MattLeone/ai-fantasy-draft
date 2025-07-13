@@ -47,7 +47,7 @@ export const useClaudeAPI = () => {
       console.log('Generating players for:', scenario, 'Count:', count);
       
       // Generate large pool for variety
-      const totalToGenerate = count * 3; // Generate 3x more, randomly select what we need
+      const totalToGenerate = count * 5; // Generate 5x more, randomly select what we need
       
 
       const prompt = `Generate ${totalToGenerate} random characters from any source imaginable.
@@ -60,7 +60,7 @@ Provide neutral descriptions.
 
 Format as JSON array:
 [
-  {"name": "Character Name", "description": "Neutral description of their abilities and background", "type": "historical|fictional|mythical|animal|other"}
+  {"name": "Character Name", "description": "Neutral description of their abilities and background"}
 ]`;
 
       console.log('Generating random characters:', totalToGenerate, 'for scenario:', scenario);
